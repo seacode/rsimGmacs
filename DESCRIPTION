@@ -1,0 +1,13 @@
+Package: rsimGmacs
+Type: Package
+Title: Simulation model for testing gmacs.
+Version: 1.0
+Date: 2015-01-24
+Author: William Stockhausen
+Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
+Description: This provides a simulation model for testing the gmacs
+stock asssessment model.
+License: MIT
+Imports:
+    ggplot2,
+    reshape2
