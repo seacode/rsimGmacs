@@ -9,7 +9,7 @@ plogis(z, mu, sd)
 \arguments{
 \item{z}{- vector of sizes at which to compute selectivities}
 
-\item{mu}{- size at which selectivity  = 50% (logit-scale mean)}
+\item{mu}{- size at which selectivity  = 0.5 (logit-scale mean)}
 
 \item{sd}{- standard deviation in selectivity (logit-scale standard deviation)}
 }
@@ -17,6 +17,9 @@ plogis(z, mu, sd)
 vector with selectivity values at the elements of z
 }
 \description{
+Function to calculate the logistic function
+}
+\details{
 
 }
 

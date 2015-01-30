@@ -25,7 +25,7 @@ calcNatZ<-function(mc,mp,iN_xmsz,R_yxz,showPlot=TRUE){
             N_msz <- dimArray(mc,'m.s.z');
             N_msz[,,] <- N_yxmsz[y,x,,,];#sex-specifc abundance at start of year y
             if (mc$type=='KC'){
-                T_zz <- mp$T_xmszz[x,1,1,,]; #indep of m,s
+                T_zz <- mp$T_yxmszz[y,x,1,1,,]; #indep of m,s
                 S_z  <- mp$S_yxmsz[y,x,1,1,];#indep of m,s
                 #one maturity state
                 if (d$s$n==1){ #one shell condition
@@ -33,7 +33,7 @@ calcNatZ<-function(mc,mp,iN_xmsz,R_yxz,showPlot=TRUE){
                     np_z <- (n_z %*% T_zz) * S_z; #growth BEFORE survival
                     N_yxmsz[y+1,x,1,1,] <- np_z + R_yxz[y,x,];
                 } else if (d$s$n==2){ #two shell conditions
-                    prMolt_z<-mp$prMolt_xmsz[x,1,1,];#indep of m,s
+                    prMolt_z<-mp$prMolt_yxmsz[y,x,1,1,];#indep of m,s
                     n_z <- as.vector(N_msz[1,'new shell',]);#new shell
                     o_z <- as.vector(N_msz[1,'old shell',]);#old shell
                     np_z <- (((n_z+o_z) * prMolt_z) %*% T_zz)*S_z;# new shell, old shell that molt, grow survive

@@ -9,7 +9,7 @@
 #'
 runSim.BBRKC<-function(showPlot=TRUE){
     #get model configuration for BBRKC
-    mc <- ModelConfiguration.BBRKC();
+    mc <- readModelConfiguration();
     
     #calculate model processes
     mp <- calcModelProcesses(mc,showPlot=showPlot);

@@ -7,7 +7,7 @@
 #'@param showPlot - flag to show plots
 #'
 #'@return list with the following elements:
-#'sel_fyxmsz - size-specific selectivity
+#'sel_vyxmsz - size-specific selectivity
 #'Q_vyxms - fully-selected survey catchability
 #'Q_vyxmsz - size-specific survey catchability
 #'
@@ -28,31 +28,32 @@ calcSurveyCatchabilities<-function(mc,showPlot=TRUE){
         Q_yx   <-dimArray(mc,'y.x');  #sex-specific capture rates by year for survey v
         sel_yxz<-dimArray(mc,'y.x.z');#sex-specific capture selectivity by year for survey v
         blocks<-vs[[v]]$blocks;
-        for (b in blocks){
-            yrs<-b$years;
+        for (t in names(blocks)){
+            b<-blocks[[t]];
+            yrs<-as.character(b$years);
             Q_b<-b$mnQ*exp(-(b$sdQ^2)/2+rnorm(length(yrs),mean=0,sd=b$sdQ));#annual Q's in time block for males
             sel_xz<-dimArray(mc,'x.z');#sex-specific capture selectivity for time block
             for (x in d$x$nms){
                 #set catchabilities
                 fac<-1;
                 if (x=='female') fac<-b$offQX;
-                Q_yx[as.character(yrs),x]<-fac*Q_b;
+                Q_yx[yrs,x]<-fac*Q_b;
                 
                 #calc selectivity/retention curves
                 si<-b$sel[[x]];#selectivity info
                 sel_xz[x,]<-calcSelectivity(si$type,d$z$vls,si$params);
-                sel_yxz[as.character(yrs),x,]<- (1+0*yrs) %o% sel_xz[x,];
+                sel_yxz[yrs,x,]<- (1+0*as.numeric(yrs)) %o% sel_xz[x,];
             }#x
             if (showPlot){
                 mdfr<-melt(sel_xz,value.name='val');
                 p <- ggplot(aes(x=z,y=val,color=x),data=mdfr);
                 p <- p + geom_point(size=6);
                 p <- p + geom_line();
-                p <- p + labs(x='size (mm)',y='survey selectivity',title=paste(v,": ",min(yrs),"-",max(yrs),sep=''))
+                p <- p + labs(x='size (mm)',y='survey selectivity',title=paste(v,", ",t,sep=''))
                 p <- p + guides(color=guide_legend(''))
                 print(p)
             }
-            for (y in d$y$nms){
+            for (y in yrs){
                 for (x in d$x$nms){
                     for (m in d$m$nms){
                         for (s in d$s$nms) {
@@ -64,7 +65,7 @@ calcSurveyCatchabilities<-function(mc,showPlot=TRUE){
                     }#m
                 }#x
             }#y
-        }#b
+        }#t
         if (showPlot){
             mdfr<-melt(Q_yx,value.name='val');
             p <- ggplot(aes(x=y,y=val,color=x),data=mdfr);

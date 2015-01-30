@@ -6,6 +6,7 @@
 #'@return R_yxz: 3d array with numbers  of crab recruiting by year/sex/size
 #'
 #'@import ggplot2
+#'@import reshape2
 #'
 #'@export
 #'
@@ -13,33 +14,41 @@ calcRecruitment<-function(mc,showPlot=TRUE){
     d <- mc$dims;      #model dimensions info
     p <- mc$params$rec;#recruitment parameters
     
-    #calc size distribution
-    R_z  <- calcRatZ(mc,showPlot=showPlot)
+    #calc annual size distribution
+    R_yz  <- calcRatZ(mc,showPlot=showPlot)
     
     #calc total recruitment by year
-    R_y  <- dimArray(mc,'y');
-    ndvs <- (d$y$n-1);
-    sigR <- exp(p$lnSigR);
-    devs <- rnorm(ndvs,mean=0, sd=sigR);
-    R_y[1+(1:ndvs)] <- exp(p$lnR+devs-mean(devs)-(sigR^2)/2);
+    R_y   <- dimArray(mc,'y');
+    dims  <- dim(R_y);
+    dmnms <- dimnames(R_y);
+    for (t in names(p$blocks)){
+        tb<-p$blocks[[t]];
+        yrs<-as.character(tb$years);
+        ndvs <- length(yrs);
+        sdR <- sqrt(log(1+(tb$cvR)^2));
+        devs <- rnorm(ndvs,mean=0, sd=sdR);
+        r_y <- exp(tb$lnR+devs-mean(devs)-(sdR^2)/2);
+        names(r_y) <- yrs;
+        R_y[yrs] <- r_y;#changes R_y from array to vector
+    }
+    R_y<-as.array(R_y,dim=dims,dimnames=dmnms);#change back to array
+    dimnames(R_y)<-dmnms;#make sure names of dimnames are correct
     
     #calc sex-specific recruitment by year
     R_yx  <- dimArray(mc,'y.x');
     if (d$x$n==1){
-        sigXR <- 0;
+        sdXR <- 0;
         R_yx[1+(1:ndvs),1] <- 1;
     } else {
-        ndvs  <- (d$y$n-1);
-        if (is.na(p$lnSigXR)){
-            sigXR <- 0;
-            devs  <- 0*(1:ndvs)
-        } else {
-            sigXR <- exp(p$lnSigXR);
-            devs  <- rnorm(ndvs,mean=0, sd=sigXR);
+        for (t in names(p$blocks)){
+            tb<-p$blocks[[t]];
+            yrs <-as.character(tb$years);
+            ndvs<- length(yrs);
+            devs<- rnorm(ndvs,mean=0, sd=tb$sdXR);
+            mXR <- 1/(1+exp(-(tb$lnXR+devs+(tb$sdXR^2)/2)));
+            R_yx[yrs,'male']   <- mXR;
+            R_yx[yrs,'female'] <- 1-mXR;
         }
-        mXR <- 1/(1+exp(-(p$lnXR+devs+(sigXR^2)/2)));
-        R_yx[1+(1:ndvs),1] <- mXR;
-        R_yx[1+(1:ndvs),2] <- 1-mXR;
     }
     
     #calc year/sex/size-specific recruimtent
@@ -48,7 +57,7 @@ calcRecruitment<-function(mc,showPlot=TRUE){
         #cat('y =',y,'\n')
         for (x in d$x$nms){
             #cat('x =',x,'\n')
-            R_yxz[y,x,] <- R_y[y]*R_yx[y,x]*R_z;
+            R_yxz[y,x,] <- R_y[y]*R_yx[y,x]*R_yz[y,];
         }
     }
     
@@ -73,8 +82,9 @@ calcRecruitment<-function(mc,showPlot=TRUE){
 #'
 #'@param mc - model configuration object
 #'
-#'@return R_z: d array with proportions of crab recruiting by size
+#'@return R_yz: d array with annual proportions of crab recruiting by size
 #'
+#'@import reshape2
 #'@import ggplot2
 #'
 #'@export
@@ -84,23 +94,73 @@ calcRatZ<-function(mc,showPlot=TRUE){
     p <- mc$params$rec;#recruitment parameters
     
     #calc size distribution
-    R_z  <- dimArray(mc,'z');
-    alpha <- exp(p$lnAlphaZ);
-    beta  <- exp(p$lnBetaZ);
-    zcs <- d$zc$vls;
-    print(zcs)
-	cum <- pgamma(zcs,shape=alpha/beta,scale=beta);
-	R_z[] <- first_difference(cum)[];
-	R_z <- R_z/sum(R_z);   # Standardize so sums to 1.0
+    R_yz  <- dimArray(mc,'y.z');
+    mdfr<-NULL;
+    for (t in names(p$blocks)){
+        tb<-p$blocks[[t]];
+        yrs<-as.character(tb$years);
+        alpha <- exp(tb$lnAlphaZ);
+        beta  <- exp(tb$lnBetaZ);
+        zcs <- d$zc$vls;
+        #print(zcs)
+	    cum <- pgamma(zcs,shape=alpha/beta,scale=beta);
+        prs<-dimArray(mc,'z');
+        prs[] <- first_difference(cum);
+        prs <- prs/sum(prs);#standardized to sum to 1
+	    for (y in yrs) {R_yz[y,] <- prs;}
+        mdfrp<-melt(prs,value.name='val');
+        mdfrp$t<-t;
+        mdfr<-rbind(mdfr,mdfrp);
+    }
     
     if (showPlot){
-        mdfr<-melt(R_z,value.name='n');
-        pz <- ggplot(mapping=aes(x=z,y=n),data=mdfr)
+        pz <- ggplot(mapping=aes(x=z,y=val,color=t),data=mdfr)
         pz <- pz + geom_line();
         pz <- pz + labs(x='size (mm)',y='pr(Z)',title='size distribution')
+        pz <- pz + guides(color=guide_legend('time block'));
+        print(pz)
+    }
+    return(R_yz)
+}
+
+#---------------------------------------------------------------------
+#'
+#'@title Calculate initial proportions recruiting-at-size
+#'
+#'@param mc - model configuration object
+#'
+#'@return R_z: 1d array with initial proportions of crab recruiting by size
+#'
+#'@import reshape2
+#'@import ggplot2
+#'
+#'@export
+#'
+calcRatZ.init<-function(mc,showPlot=TRUE){
+    d <- mc$dims;      #model dimensions info
+    p <- mc$params$rec$inits;#recruitment parameters
+    
+    #calc size distribution
+    R_z  <- dimArray(mc,'z');
+    mdfr<-NULL;
+        alpha <- exp(p$lnAlphaZ);
+        beta  <- exp(p$lnBetaZ);
+        zcs <- d$zc$vls;
+        #print(zcs)
+        cum <- pgamma(zcs,shape=alpha/beta,scale=beta);
+        prs<-dimArray(mc,'z');
+        prs[] <- first_difference(cum);
+        prs <- prs/sum(prs);#standardized to sum to 1
+        R_z[] <- prs;
+        mdfr<-melt(prs,value.name='val');
+    
+    if (showPlot){
+        pz <- ggplot(mapping=aes(x=z,y=val),data=mdfr)
+        pz <- pz + geom_line();
+        pz <- pz + labs(x='size (mm)',y='pr(Z)',title='initial size distribution')
+        pz <- pz + guides(color=guide_legend(''));
         print(pz)
     }
     return(R_z)
 }
 
-#R_yxz <- calcRecruitment(mc)

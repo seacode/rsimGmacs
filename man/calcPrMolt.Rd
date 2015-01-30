@@ -12,7 +12,7 @@ calcPrMolt(mc, showPlot = TRUE)
 \item{showPlot}{- flag to show plots}
 }
 \value{
-prMolt_xmsz
+prMolt_yxmsz
 }
 \description{
 

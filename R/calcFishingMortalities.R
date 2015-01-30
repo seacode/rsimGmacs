@@ -22,23 +22,24 @@
 #'
 calcFishingMortalities<-function(mc,showPlot=TRUE){
     d<-mc$dims;
-    fs<-mc$params$fisheries
+    fs<-mc$params$fisheries;
     
-    F_fyxms<-dimArray(mc,'f.y.x.m.s');
+    F_fyxms   <-dimArray(mc,'f.y.x.m.s');
     sel_fyxmsz<-dimArray(mc,'f.y.x.m.s.z')
     ret_fyxmsz<-dimArray(mc,'f.y.x.m.s.z');
-    FC_fyxmsz<-dimArray(mc,'f.y.x.m.s.z');
-    FM_fyxmsz<-dimArray(mc,'f.y.x.m.s.z');
-    RM_fyxmsz<-dimArray(mc,'f.y.x.m.s.z');
-    DM_fyxmsz<-dimArray(mc,'f.y.x.m.s.z');
+    FC_fyxmsz <-dimArray(mc,'f.y.x.m.s.z');
+    FM_fyxmsz <-dimArray(mc,'f.y.x.m.s.z');
+    RM_fyxmsz <-dimArray(mc,'f.y.x.m.s.z');
+    DM_fyxmsz <-dimArray(mc,'f.y.x.m.s.z');
     
     for (f in names(fs)){
         F_yx   <-dimArray(mc,'y.x');  #sex-specific capture rates by year for fishery f
         sel_yxz<-dimArray(mc,'y.x.z');#sex-specific capture selectivity by year for fishery f
         ret_yxz<-dimArray(mc,'y.x.z');#sex-specific retention by year for fishery f
         blocks<-fs[[f]]$blocks;
-        for (b in blocks){
-            yrs<-b$years;
+        for (t in names(blocks)){
+            b<-blocks[[t]];
+            yrs<-as.character(b$years);
             F_b<-b$mnF*exp(-(b$sdF^2)/2+rnorm(length(yrs),mean=0,sd=b$sdF));#annual F's in time block for males
             sel_xz<-dimArray(mc,'x.z');#sex-specific capture selectivity for time block
             ret_xz<-dimArray(mc,'x.z');#sex-specific retention for time block
@@ -46,7 +47,7 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
                 #set capture rates
                 fac<-1;
                 if (x=='female') fac<-b$offFX;
-                F_yx[as.character(yrs),x]<-fac*F_b;
+                F_yx[yrs,x]<-fac*F_b;
                 
                 #calc selectivity/retention curves
                 si<-b$sel[[x]];#selectivity info
@@ -54,8 +55,8 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
                 sel_xz[x,]<-calcSelectivity(si$type,d$z$vls,si$params);
                 ret_xz[x,]<-0*sel_xz[x,];
                 if (!is.null(ri)) ret_xz[x,]<-calcSelectivity(ri$type,d$z$vls,ri$params);
-                sel_yxz[as.character(yrs),x,]<- (1+0*yrs) %o% sel_xz[x,];
-                ret_yxz[as.character(yrs),x,]<- (1+0*yrs) %o% ret_xz[x,];
+                sel_yxz[yrs,x,]<- (1+0*as.numeric(yrs)) %o% sel_xz[x,];
+                ret_yxz[yrs,x,]<- (1+0*as.numeric(yrs) )%o% ret_xz[x,];
             }#x
             if (showPlot){
                 sdfr<-melt(sel_xz,value.name='val');
@@ -66,15 +67,17 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
                 p <- ggplot(aes(x=z,y=val,color=x,shape=type),data=mdfr);
                 p <- p + geom_point(size=6);
                 p <- p + geom_line();
-                p <- p + labs(x='size (mm)',y='selectivity/retention',title=paste(f,": ",min(yrs),"-",max(yrs),sep=''))
+                p <- p + labs(x='size (mm)',y='selectivity/retention',title=paste(f,", ",t,sep=''))
                 p <- p + guides(color=guide_legend(''),shape=guide_legend(''))
                 print(p)
             }
-            for (y in d$y$nms){
+            #print(dimnames(F_fyxms))
+            for (y in yrs){
                 for (x in d$x$nms){
                     for (m in d$m$nms){
                         for (s in d$s$nms) {
                             #no dependence on m,s assumed
+                            #cat(f,y,x,m,s,'\n')
                             F_fyxms[f,y,x,m,s]     <- F_yx[y,x];
                             sel_fyxmsz[f,y,x,m,s,] <- sel_yxz[y,x,];
                             ret_fyxmsz[f,y,x,m,s,] <- ret_yxz[y,x,];

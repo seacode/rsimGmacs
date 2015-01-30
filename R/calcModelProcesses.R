@@ -1,21 +1,30 @@
 #'
 #'@title Calculate model processes
 #'
+#'@description Function to calculate model processes prior to running the model
+#'
+#'@param mc - model configuration list object
+#'@param showPlot - flag (T/F) to show plots
+#'
+#'@return mp - list object for model processes
+#'
+#'@export
+#'
 calcModelProcesses<-function(mc,showPlot=TRUE){
     #weight-at-size
-    W_xmsz <- calcWatZ(mc,showPlot=showPlot);
+    W_yxmsz <- calcWatZ(mc,showPlot=showPlot);
     
     #calculate time-varying natural mortality
     M_yxmsz <- calcNaturalMortality(mc,showPlot=showPlot);
     
     #calculate molting probabilities
-    prMolt_xmsz<-calcPrMolt(mc,showPlot=showPlot);
+    prMolt_yxmsz<-calcPrMolt(mc,showPlot=showPlot);
     
     #calculate size transition matrix
-    T_xmszz <- calcZTM(mc,showPlot=showPlot);
+    T_yxmszz <- calcZTM(mc,showPlot=showPlot);
     
     #calculate pr(maturity|size) [interpretations differ for KC, TC]
-    prMat_xz <- calcMaturity(mc,showPlot=showPlot);
+    prMat_yxz <- calcMaturity(mc,showPlot=showPlot);
     
     #calculate fishing mortalities
     F_list <- calcFishingMortalities(mc,showPlot=showPlot);
@@ -32,13 +41,13 @@ calcModelProcesses<-function(mc,showPlot=TRUE){
     #calculate survival
     S_yxmsz <- exp(-Z_yxmsz);
     
-    mp <- list(W_xmsz=W_xmsz,
+    mp <- list(W_yxmsz=W_yxmsz,
                M_yxmsz=M_yxmsz,
                Z_yxmsz=Z_yxmsz,
                S_yxmsz=S_yxmsz,
-               prMolt_xmsz=prMolt_xmsz,
-               T_xmszz=T_xmszz,
-               prMat_xz=prMat_xz,
+               prMolt_yxmsz=prMolt_yxmsz,
+               T_yxmszz=T_yxmszz,
+               prMat_yxz=prMat_yxz,
                F_list=F_list,
                S_list=S_list)
     

@@ -11,7 +11,7 @@ calcSelectivity(type, z, params)
 
 \item{z}{- vector of values at which to calculate the function}
 
-\item{params}{- the selectivity function parameters, as a list}
+\item{params}{- the selectivity function parameters, as a vector}
 }
 \value{
 vector matching size of z, with names given by elements of z

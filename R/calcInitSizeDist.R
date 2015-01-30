@@ -15,24 +15,24 @@
 #'
 calcInitSizeDist<-function(mc,mp,showPlot=TRUE){
     d<-mc$dims;
-    p<-mc$params$rec;
+    p<-mc$params$rec$inits;
     
     n_xmsz<-dimArray(mc,'x.m.s.z');
     
-    sigR<- exp(p$lnSigR);
-    R0  <- exp(p$lnR-(sigR^2)/2);
-    R_z <- calcRatZ(mc,showPlot=FALSE)
+    sdR <- sqrt(log(1+(p$cvR)^2));
+    R0  <- exp(p$lnR-(sdR^2)/2);
+    R_z <- calcRatZ.init(mc,showPlot=TRUE)
     if (mc$type=='KC'){
         r<-0.5*R0*R_z;#assumes equal size ratio
         for (x in d$x$nms){
-            T_zz<-mp$T_xmszz[x,1,1,,];#indep of m,s
-            S_z<-mp$S_yxmsz[1,x,1,1,];#indep of m,s
+            T_zz<-mp$T_yxmszz[1,x,1,1,,];#indep of m,s
+            S_z <-mp$S_yxmsz[1,x,1,1,];#indep of m,s
             if ((d$s$n==1)&(d$m$n==1)){
                 #one shell condition, one maturity state
                 n_xmsz[x,1,1,]<-calcEquilSizeDist.11(r,T_zz,S_z);
             } else if ((d$s$n==2)&(d$m$n==1)) {
                 #two shell conditions, one maturity state
-                prMolt_z<-mp$prMolt_xmsz[x,1,1,];#indep of m,s
+                prMolt_z<-mp$prMolt_yxmsz[1,x,1,1,];#indep of m,s
                 res_sz<-calcEquilSizeDist.21(r,T_zz,S_z,prMolt_z);
                 n_xmsz[x,1,,]<-res_sz;
             } else {
@@ -115,4 +115,3 @@ calcEquilSizeDist.21<-function(r,A,S,P){
     n_xz <- t(array(data=c(n,o),dim=c(length(n),2)));
     return(n_xz);
 }
-

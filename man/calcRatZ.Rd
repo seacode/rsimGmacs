@@ -10,7 +10,7 @@ calcRatZ(mc, showPlot = TRUE)
 \item{mc}{- model configuration object}
 }
 \value{
-R_z: d array with proportions of crab recruiting by size
+R_yz: d array with annual proportions of crab recruiting by size
 }
 \description{
 

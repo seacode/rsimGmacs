@@ -13,7 +13,7 @@ calcSurveyCatchabilities(mc, showPlot = TRUE)
 }
 \value{
 list with the following elements:
-sel_fyxmsz - size-specific selectivity
+sel_vyxmsz - size-specific selectivity
 Q_vyxms - fully-selected survey catchability
 Q_vyxmsz - size-specific survey catchability
 }

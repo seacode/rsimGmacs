@@ -12,7 +12,7 @@ calcMaturity(mc, showPlot = TRUE)
 \item{showPlot}{- flag (T/F) to plot results}
 }
 \value{
-mat_xz
+mat_yxz
 }
 \description{
 Function to calculate maturity from model parameters.

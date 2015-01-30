@@ -1,0 +1,170 @@
+# Notes on model configuration object
+# 
+# mc$dims
+#     y
+#         mny - min year
+#         mxy - max year
+#         n   - number of model years to simulate
+#         nms - vector of years as names
+#         vls - vector of years as values
+#     x
+#         n   - number of sexes
+#         nms - names of sexes
+#     m
+#         n   - number of maturity states
+#         nms - names of maturity states
+#     s
+#         n   - number of shell conditions
+#         nms - names of shell conditions
+#     z
+#         n - number of size bins
+#         nms - size bins (midpoints) as names
+#         vls - size bins as values
+#     zp   (same as z, but used for post-molt bins in growth matrices)
+#         n - number of size bins
+#         nms - size bins (midpoints) as names
+#         vls - size bins as values
+#     zc
+#         n - number of size cutpoints
+#         nms - sizebin cutpoints as names
+#         vls - sizebin cutpoints as values
+#     f
+#         n - number of fisheries
+#         nms - names of fisheries
+#     v
+#         n - number of surveys
+#         nms - names of surveys
+# mc$params
+#     recruitment
+#         lnR  - ln-scale mean recruitment
+#         sigR - ln-scale recruitment standard deviation
+#         lnXR - nominal sex ratio
+#         sigXR - ln-scale standard deviation for sex ratio deviations
+#         aZ    - alpha parameter for rec. size distribution
+#         bZ    - beta parameter for rec. size distribution
+#-----------------------------------------------------------------------------------
+ModelConfiguration #keyword
+KC     #model type (KC or TC for king crab or Tanner crab)
+#---------------------------------------------------------------
+#-----dimensions
+1975   #min y
+2014   #max y
+65     #min size cutpoint (mm)
+165    #max size cutpoint (mm)
+5      #size bin size (mm)
+2      #number of sexes
+'male' 'female'  #labels for sexes
+1      #number of maturity states
+'all'            #labels for maturity states
+2      #number of shell conditions
+'new shell' 'old shell' #labels for shell conditions
+2      #number of fisheries
+'BBRKC fishery' 'bycatch fishery' #labels for fisheries
+2      #number of surveys
+'NMFS trawl survey' 'BSFRF trawl survey' #names for surveys
+#---------------------------------------------------------------
+#-----parameters
+#--Weight-at-size
+WatZ    #weight-at-size keyword
+1       #number of time blocks
+1975:2014 #time block 1
+3       #number of combinations
+#sex  size category    a       b
+'female' 'zbs>89'   3.593e-7  2.666076
+'female' 'zbs<90'   4.08e-7   3.127956
+  'male' 'zbs>0'    4.03e-7   3.141334
+#--Natural mortality
+M      #natural mortality key word
+3      #number of time blocks
+1975:1989  #time block 1
+#sex       M      cv   
+   'male'  0.18    0.01  
+ 'female'  0.18    0.01  
+1990:1994  #time block 2
+#sex       M      cv   
+   'male'  0.30    0.01  
+ 'female'  0.45    0.01  
+1995:2014  #time block 3  
+#sex       M      cv   
+   'male'  0.18    0.01  
+ 'female'  0.18    0.01  
+#--Molting
+Molting
+2   #number of time blocks
+1975:1990  #time block 1
+#sex       mu    cv
+  'male'  115   0.20
+'female'  159   0.01
+1991:2014  #time block 2
+#sex       mu    cv
+  'male'  115   0.20
+'female'  159   0.01
+#--Growth
+Growth
+1         #number of time blocks
+1975:2014 #time block 1
+#sex        a       b   scale
+  'male'   17.5   0.10   6.0
+'female'   17.5   0.10   6.0
+#--Maturity  
+Maturity 
+1    #number of time blocks
+1975:2014 #time block 1
+#sex  size bins:
+  'male'         0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  1  1                             
+'female'         0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  1  1  
+#--Recruitment
+Recruitment
+#initialization
+#lnR    cvR   lnXR   sdXR   lnAlphaZ      lnBetaZ
+7.0    0.5     0      0    4.283586562  -0.916290732
+2  #number of time blocks
+#years     lnR    cvR   lnXR   sdXR   lnAlphaZ      lnBetaZ
+1975:1990  7.0    0.5     0      0    4.283586562  -0.916290732
+1991:2014  7.0    0.5     0      0    4.283586562  -0.916290732
+#--Fisheries
+Fisheries #keyword
+#-fishery 1
+'BBRKC fishery'
+1   #number of time blocks
+#years   discard mortality   mean F   sd F   female offset
+1975:2014      0.3             0.3     0.4       0.1
+#selectivity
+3   #number of curves
+#sex       type          function   np   params 
+  'male'  'selectivity' 'logistic'   2    100    20  #mu    sd
+'female'  'selectivity' 'logistic'   2     60    20  #mu    sd
+  'male'  'retention'   'logistic'   2    120    20  #mu    sd
+#-fishery 2
+'bycatch fishery'
+1   #number of time blocks
+#years   discard mortality    mean F  sd F   female offset
+1975:2014      0.8             0.2     0.2      0.1
+#selectivity/retention
+2   #number of curves
+#sex       type          function    np params  
+  'male'  'selectivity' 'logistic'    2   60    20    #mu    sd
+'female'  'selectivity' 'logistic'    2   40    20    #mu    sd
+#--Surveys
+Surveys  #keyword
+#-survey 1
+'NMFS trawl survey'
+1   #number of time blocks
+#years       mean Q     sd Q  female offset
+1975:2014      0.7        0.1     0.8
+#selectivity
+2   #number of curves
+#sex       type          function    np   params
+  'male'  'selectivity' 'logistic'   2     50    20  #mu    sd
+'female'  'selectivity' 'logistic'   2     50    20  #mu    sd
+#-survey 2
+'BSFRF trawl survey'
+1   #number of time blocks
+#years          mean Q     sd Q  female offset
+c(2010,2014)      1.0       0.0     0.1
+#selectivity
+2   #number of curves
+#sex       type          function    np  params
+  'male'  'selectivity' 'logistic'    2    60    20  #mu    sd
+'female'  'selectivity' 'logistic'    2    40    20  #mu    sd
+DONE #keyword

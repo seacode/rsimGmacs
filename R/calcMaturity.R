@@ -10,7 +10,7 @@
 #'@param mc  model configuration list object
 #'@param showPlot - flag (T/F) to plot results
 #'
-#'@return mat_xz
+#'@return mat_yxz
 #'
 #'@import reshape2
 #'@import ggplot2
@@ -21,22 +21,29 @@ calcMaturity<-function(mc,showPlot=TRUE){
     d<-mc$dims;
     p<-mc$params$maturity;
     
+    mat_yxz<-dimArray(mc,'y.x.z');
     if (mc$type=='KC'){
-        mat_xz <- p$mat_xz;
-    } else if (mc$type=='TC'){
-        mat_xz <- p$mat_xz;
+        mdfr<-NULL;
+        for (t in names(p$blocks)){
+            tb<-p$blocks[[t]];
+            yrs<-as.character(tb$years);
+            mat_yxz[yrs,,] <- tb$mat_xz;
+            mdfrp<-melt(tb$mat_xz,value.name='val');
+            mdfrp$tb<-t;
+            mdfr<-rbind(mdfr,mdfrp);
+        }
     } else {
         throwModelTypeError(mc$type,'calcMaturity()');
     }
     
     if (showPlot){
-        mdfr<-melt(mat_xz,value.name='val');
         p <- ggplot(aes(x=z,y=val,color=x),data=mdfr)
         p <- p + geom_line()
         p <- p + labs(x='size (mm)',y='pr(maturity|size)')
         p <- p + guides(color=guide_legend('sex'))
+        p <- p + facet_wrap(~tb,ncol=1)
         print(p);
     }
     
-    return(mat_xz);
+    return(mat_yxz);
 }

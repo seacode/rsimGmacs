@@ -25,15 +25,34 @@ calcNaturalMortality<-function(mc,showPlot=TRUE){
 #'
 #'@return array M_yxmsz
 #'
+#'@import reshape2
 #'@import ggplot2
 #'
 #'@export
 #'
 calcNM.gmacs<-function(mc,showPlot=TRUE){
+    d<-mc$dims;
     p<-mc$params$nm;
-    M_yxmsz <- dimArray(mc,'y.x.m.s.z',val=p$M0);
-    #TODO: add in time-varying natural mortality
-    #TODO: add in plot
+    M_yxmsz <- dimArray(mc,'y.x.m.s.z');
+    mdfr<-NULL;
+    for (t in names(p$blocks)){
+        tb<-p$blocks[[t]];
+        yrs<-as.character(tb$years);
+        M_x <- dimArray(mc,'x');
+        M_x[]<-tb$mnM;
+        for (x in d$x$nms) {M_yxmsz[yrs,x,,,] <- M_x[x];}
+        mdfrp<-melt(M_x,value.name='val');
+        mdfrp$tb<-t;
+        mdfr<-rbind(mdfr,mdfrp);
+    }
+    
+    if (showPlot){
+        p <- ggplot(aes(x=tb,y=val,fill=x),data=mdfr)
+        p <- p + geom_bar(stat='identity',position='dodge')
+        p <- p + labs(x='time block',y='M')
+        p <- p + guides(fill=guide_legend('sex'))
+        print(p);
+    }
     return(M_yxmsz);
 }
 
