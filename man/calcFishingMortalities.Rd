@@ -15,6 +15,7 @@ calcFishingMortalities(mc, showPlot = TRUE)
 list with the following elements
 sel_fyxmsz - size-specific selectivity
 ret_fyxmsz - size-specific retention
+hm_fy - handling mortality rate
 F_fyxms - fully-selected fishing capture rate
 FC_fyxmsz - size-specific fishing capture rate
 FM_fyxmsz - size-specific fishing mortality rate

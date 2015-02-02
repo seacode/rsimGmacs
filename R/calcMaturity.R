@@ -27,7 +27,7 @@ calcMaturity<-function(mc,showPlot=TRUE){
         for (t in names(p$blocks)){
             tb<-p$blocks[[t]];
             yrs<-as.character(tb$years);
-            mat_yxz[yrs,,] <- tb$mat_xz;
+            for (y in yrs) {mat_yxz[y,,] <- tb$mat_xz;}
             mdfrp<-melt(tb$mat_xz,value.name='val');
             mdfrp$tb<-t;
             mdfr<-rbind(mdfr,mdfrp);

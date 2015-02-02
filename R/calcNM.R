@@ -40,7 +40,9 @@ calcNM.gmacs<-function(mc,showPlot=TRUE){
         yrs<-as.character(tb$years);
         M_x <- dimArray(mc,'x');
         M_x[]<-tb$mnM;
-        for (x in d$x$nms) {M_yxmsz[yrs,x,,,] <- M_x[x];}
+        for (y in yrs) {
+            for (x in d$x$nms) {M_yxmsz[y,x,,,] <- M_x[x];}
+        }
         mdfrp<-melt(M_x,value.name='val');
         mdfrp$tb<-t;
         mdfr<-rbind(mdfr,mdfrp);

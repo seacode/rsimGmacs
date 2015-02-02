@@ -29,7 +29,7 @@ calcRecruitment<-function(mc,showPlot=TRUE){
         devs <- rnorm(ndvs,mean=0, sd=sdR);
         r_y <- exp(tb$lnR+devs-mean(devs)-(sdR^2)/2);
         names(r_y) <- yrs;
-        R_y[yrs] <- r_y;#changes R_y from array to vector
+        R_y[yrs] <- r_y;#changes R_y from array to vector for some reason
     }
     R_y<-as.array(R_y,dim=dims,dimnames=dmnms);#change back to array
     dimnames(R_y)<-dmnms;#make sure names of dimnames are correct

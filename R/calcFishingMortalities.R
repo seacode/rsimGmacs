@@ -9,6 +9,7 @@
 #'@return list with the following elements
 #'sel_fyxmsz - size-specific selectivity
 #'ret_fyxmsz - size-specific retention
+#'hm_fy - handling mortality rate
 #'F_fyxms - fully-selected fishing capture rate
 #'FC_fyxmsz - size-specific fishing capture rate
 #'FM_fyxmsz - size-specific fishing mortality rate
@@ -24,6 +25,7 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
     d<-mc$dims;
     fs<-mc$params$fisheries;
     
+    hm_fy     <-dimArray(mc,'f.y');
     F_fyxms   <-dimArray(mc,'f.y.x.m.s');
     sel_fyxmsz<-dimArray(mc,'f.y.x.m.s.z')
     ret_fyxmsz<-dimArray(mc,'f.y.x.m.s.z');
@@ -40,6 +42,7 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
         for (t in names(blocks)){
             b<-blocks[[t]];
             yrs<-as.character(b$years);
+            hm_fy[f,yrs]<-b$hm;
             F_b<-b$mnF*exp(-(b$sdF^2)/2+rnorm(length(yrs),mean=0,sd=b$sdF));#annual F's in time block for males
             sel_xz<-dimArray(mc,'x.z');#sex-specific capture selectivity for time block
             ret_xz<-dimArray(mc,'x.z');#sex-specific retention for time block
@@ -55,8 +58,8 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
                 sel_xz[x,]<-calcSelectivity(si$type,d$z$vls,si$params);
                 ret_xz[x,]<-0*sel_xz[x,];
                 if (!is.null(ri)) ret_xz[x,]<-calcSelectivity(ri$type,d$z$vls,ri$params);
-                sel_yxz[yrs,x,]<- (1+0*as.numeric(yrs)) %o% sel_xz[x,];
-                ret_yxz[yrs,x,]<- (1+0*as.numeric(yrs) )%o% ret_xz[x,];
+                for (y in yrs) {sel_yxz[y,x,]<-sel_xz[x,];}
+                for (y in yrs) {ret_yxz[y,x,]<-ret_xz[x,];}
             }#x
             if (showPlot){
                 sdfr<-melt(sel_xz,value.name='val');
@@ -104,6 +107,6 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
         }
     }#f
     
-    return(list(sel_fyxmsz=sel_fyxmsz,ret_fyxmsz=ret_fyxmsz,F_fyxms=F_fyxms,
+    return(list(sel_fyxmsz=sel_fyxmsz,ret_fyxmsz=ret_fyxmsz,hm_fy=hm_fy,F_fyxms=F_fyxms,
                 FC_fyxmsz=FC_fyxmsz,FM_fyxmsz=FM_fyxmsz,RM_fyxmsz=RM_fyxmsz,DM_fyxmsz=DM_fyxmsz))
 }

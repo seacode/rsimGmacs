@@ -42,7 +42,7 @@ calcSurveyCatchabilities<-function(mc,showPlot=TRUE){
                 #calc selectivity/retention curves
                 si<-b$sel[[x]];#selectivity info
                 sel_xz[x,]<-calcSelectivity(si$type,d$z$vls,si$params);
-                sel_yxz[yrs,x,]<- (1+0*as.numeric(yrs)) %o% sel_xz[x,];
+                for (y in yrs) {sel_yxz[y,x,]<-sel_xz[x,];}
             }#x
             if (showPlot){
                 mdfr<-melt(sel_xz,value.name='val');

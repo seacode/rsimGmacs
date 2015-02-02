@@ -2,15 +2,23 @@
 % Please edit documentation in R/runSim.BBRKC.R
 \name{runSim.BBRKC}
 \alias{runSim.BBRKC}
-\title{Run the BBRKC simulation model}
+\title{Run the BBRKC simulation model to produce a Gmacs input file.}
 \usage{
-runSim.BBRKC(showPlot = TRUE)
+runSim.BBRKC(fn = "gmacs.input.dat", showPlot = TRUE)
 }
 \arguments{
+\item{fn}{- filename for output file (input file to gmacs)}
+
 \item{showPlot}{- flag (T/F) to show plots}
 }
+\value{
+list with elements:
+mc - model configuration list object
+mp - model processes list object
+mr - model results list object
+}
 \description{
-Function to run the BBRKC simulation model
+Function to run the BBRKC simulation model to produce a Gmacs input file.
 }
 \details{
 
