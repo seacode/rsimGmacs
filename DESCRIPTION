@@ -1,7 +1,7 @@
 Package: rsimGmacs
 Type: Package
 Title: Simulation model for testing gmacs.
-Version: 0.5.1
+Version: 0.5.2
 Date: 2015-02-18
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
