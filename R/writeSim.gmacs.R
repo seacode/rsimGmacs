@@ -357,6 +357,11 @@ writeSim.gmacs<-function(mc,mp,mr,fn='gmacs.input.dat',showPlot=TRUE){
             }#y
         }
     }#v
+    
+    #growth increment data (TODO: add GI data as an option)
+    cat('##  Growth increment data (currently none)\n',file=conn);
+    cat('##  nobs_growth\n',file=conn);
+    cat('0\n',file=conn);
     cat('##  eof\n',file=conn);
     cat('9999\n',file=conn);       
     close(conn);    

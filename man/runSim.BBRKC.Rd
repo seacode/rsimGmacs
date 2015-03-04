@@ -4,12 +4,21 @@
 \alias{runSim.BBRKC}
 \title{Run the BBRKC simulation model to produce a Gmacs input file.}
 \usage{
-runSim.BBRKC(fn = "gmacs.input.dat", showPlot = TRUE)
+runSim.BBRKC(fn = "gmacs.input.dat", seed = NULL, showPlot = TRUE,
+  pdf = NULL, width = 8, height = 6)
 }
 \arguments{
 \item{fn}{- filename for output file (input file to gmacs)}
 
+\item{seed}{- random number generator seed}
+
 \item{showPlot}{- flag (T/F) to show plots}
+
+\item{pdf}{- name of pdf file to save plots to (if not NULL)}
+
+\item{width}{- page width for pdf}
+
+\item{height}{- page height for pdf}
 }
 \value{
 list with elements:

@@ -70,7 +70,7 @@ WatZ    #weight-at-size keyword
 1975:2014 #time block 1
 3       #number of combinations
 #sex  size category    a       b
-'female' 'zbs>89'   3.593e-7  2.666076
+'female' 'zbs>89'   3.593e-6  2.666076
 'female' 'zbs<90'   4.08e-7   3.127956
   'male' 'zbs>0'    4.03e-7   3.141334
 #--Natural mortality
@@ -104,8 +104,8 @@ Growth
 1         #number of time blocks
 1975:2014 #time block 1
 #sex        a       b   scale
-  'male'   17.5   0.10   6.0
-'female'   17.5   0.10   6.0
+  'male'   17.5   0.10   0.7
+'female'   17.5   0.10   0.7
 #--Maturity  
 Maturity 
 1    #number of time blocks
