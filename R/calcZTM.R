@@ -3,7 +3,9 @@
 #'
 #'@param mc - model configuration object
 #'
-#'@return prZAM_yxmszz: 5d array with weight-at-size by year/sex/maturity state/shell condition
+#'@return list with elements:
+#'prZAM_yxmszz: 6d array with size transition matrices by year/sex/maturity state/shell condition
+#'mnMI_yxz: 3d array with mean size increment at size bin midpoints by year/sex
 #'
 #'@import ggplot2
 #'@import reshape2
@@ -14,7 +16,8 @@ calcZTM<-function(mc,showPlot=TRUE){
     d<-mc$dims;
     p<-mc$params$growth;
     
-    prZAM_yxmszz <- dimArray(mc,'y.x.m.s.z.zp')
+    mnMI_yxz     <- dimArray(mc,'y.x.z');
+    prZAM_yxmszz <- dimArray(mc,'y.x.m.s.z.zp');
     mdfr.pr<-NULL;
     mdfr.mn<-NULL;
     for (t in names(p$blocks)){
@@ -24,6 +27,9 @@ calcZTM<-function(mc,showPlot=TRUE){
         mi_xz <- dimArray(mc,'x.z');
         for (x in d$x$nms){
             mi_xz[x,]<-tb$a_x[x]-tb$b_x[x]*d$z$vls;#molt increment for MIDPOINTS
+            for (y in yrs) {
+                mnMI_yxz[y,x,]<-mi_xz[x,];
+            }
         }
         
         mnZAM_xz    <- dimArray(mc,'x.z')
@@ -75,5 +81,5 @@ calcZTM<-function(mc,showPlot=TRUE){
         p <- p + facet_wrap(~ x+t, ncol=1);
         print(p);
     }
-    return(prZAM_yxmszz)
+    return(list(prZAM_yxmszz=prZAM_yxmszz,mnMI_yxz=mnMI_yxz));
 }

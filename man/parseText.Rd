@@ -6,7 +6,7 @@
 keeping quoted text together in same element (with whitespace but without quotation marks).}
 \usage{
 parseText(strv, qt = "'", keepQuotes = FALSE, stripComments = TRUE,
-  comment = "#")
+  comment = "#", verbose = FALSE)
 }
 \arguments{
 \item{strv}{- chracter vector to parse}
@@ -16,6 +16,8 @@ parseText(strv, qt = "'", keepQuotes = FALSE, stripComments = TRUE,
 \item{keepQuotes}{- flag to keep the quotation marks in the output (does nothing)}
 
 \item{comment}{- character used to indicate the start of a comment}
+
+\item{verbose}{- flag (T/F) to print details of parsing operations to screen}
 
 \item{removeComments}{- flag to remove comments prior to parsing}
 }

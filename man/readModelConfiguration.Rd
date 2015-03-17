@@ -4,12 +4,14 @@
 \alias{readModelConfiguration}
 \title{Select and read a model configuration file.}
 \usage{
-readModelConfiguration(fn = NULL, ext = "*")
+readModelConfiguration(fn = NULL, ext = "*", verbose = FALSE)
 }
 \arguments{
 \item{fn}{- the file to read (NULL brings up a file chooser dialog)}
 
 \item{ext}{- extension of type of file to select (if fn is NULL)}
+
+\item{verbose}{- flag (T/F) to write parsing information to screen}
 }
 \value{
 model configuration list object

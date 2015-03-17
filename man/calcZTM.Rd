@@ -10,7 +10,9 @@ calcZTM(mc, showPlot = TRUE)
 \item{mc}{- model configuration object}
 }
 \value{
-prZAM_yxmszz: 5d array with weight-at-size by year/sex/maturity state/shell condition
+list with elements:
+prZAM_yxmszz: 6d array with size transition matrices by year/sex/maturity state/shell condition
+mnMI_yxz: 3d array with mean size increment at size bin midpoints by year/sex
 }
 \description{
 

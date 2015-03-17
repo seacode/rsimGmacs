@@ -127,8 +127,8 @@ Fisheries #keyword
 #-fishery 1
 'BBRKC fishery'
 1   #number of time blocks
-#years   discard mortality   mean F   sd F   female offset
-1975:2014      0.3             0.3     0.4       0.1
+#years   discard mortality   mean F   sd F   female offset   cv      add observation error
+1975:2014      0.3             0.3     0.4       0.1         0.2            TRUE
 #selectivity
 3   #number of curves
 #sex       type          function   np   params 
@@ -138,8 +138,8 @@ Fisheries #keyword
 #-fishery 2
 'bycatch fishery'
 1   #number of time blocks
-#years   discard mortality    mean F  sd F   female offset
-1975:2014      0.8             0.2     0.2      0.1
+#years   discard mortality    mean F  sd F   female offset   cv      add observation error
+1975:2014      0.8             0.2     0.2      0.1          0.2            TRUE
 #selectivity/retention
 2   #number of curves
 #sex       type          function    np params  
@@ -150,8 +150,8 @@ Surveys  #keyword
 #-survey 1
 'NMFS trawl survey'
 1   #number of time blocks
-#years       mean Q     sd Q  female offset
-1975:2014      0.7        0.1     0.8
+#years       mean Q     sd Q  female offset   cv      add observation error
+1975:2014      0.7        0.1     0.8        0.2            TRUE
 #selectivity
 2   #number of curves
 #sex       type          function    np   params
@@ -160,11 +160,16 @@ Surveys  #keyword
 #-survey 2
 'BSFRF trawl survey'
 1   #number of time blocks
-#years          mean Q     sd Q  female offset
-c(2010,2014)      1.0       0.0     0.1
+#years          mean Q     sd Q  female offset   cv      add observation error
+c(2010,2014)      1.0       0.0       0.1       0.05            TRUE
 #selectivity
 2   #number of curves
 #sex       type          function    np  params
   'male'  'selectivity' 'logistic'    2    60    20  #mu    sd
 'female'  'selectivity' 'logistic'    2    40    20  #mu    sd
+#--Growth increment data
+GrowthIncrementData  #keyword
+1     #number of annual collections
+#sample_years   cv    add observation error
+2013            0.2          TRUE
 DONE #keyword

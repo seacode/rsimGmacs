@@ -358,10 +358,32 @@ writeSim.gmacs<-function(mc,mp,mr,fn='gmacs.input.dat',showPlot=TRUE){
         }
     }#v
     
-    #growth increment data (TODO: add GI data as an option)
-    cat('##  Growth increment data (currently none)\n',file=conn);
+    #growth increment data
+    giData<-mc$params$giData;
+    ng<-length(giData);
+    cat('##  Growth increment data\n',file=conn);
     cat('##  nobs_growth\n',file=conn);
-    cat('0\n',file=conn);
+    cat(ng*d$x$n*d$z$n,'\n',file=conn);
+    if (ng>0){
+        cat('## MidPoint  Sex Increment CV\n',file=conn);
+        for (t in names(giData)){
+            gi<-giData[[t]];
+            years<-as.character(gi$years);
+            for (y in years){
+                cat('# ',y,'\n',file=conn);
+                for (x in 1:d$x$n){
+                    for (z in d$z$nms){
+                        val<-mp$mnMI_yxz[y,x,z];#mean molt increment
+                        cv<-gi$cv;
+                        if (gi$addObsErr&(cv>0)){
+                            val<-val*(1+cv*rnorm(1));#add gaussian error based on cv
+                        }
+                        cat(z,x,val,cv,'\n',file=conn);
+                    }
+                }
+            }
+        }
+    }
     cat('##  eof\n',file=conn);
     cat('9999\n',file=conn);       
     close(conn);    

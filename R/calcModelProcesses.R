@@ -21,7 +21,7 @@ calcModelProcesses<-function(mc,showPlot=TRUE){
     prMolt_yxmsz<-calcPrMolt(mc,showPlot=showPlot);
     
     #calculate size transition matrix
-    T_yxmszz <- calcZTM(mc,showPlot=showPlot);
+    G_list <- calcZTM(mc,showPlot=showPlot);
     
     #calculate pr(maturity|size) [interpretations differ for KC, TC]
     prMat_yxz <- calcMaturity(mc,showPlot=showPlot);
@@ -46,7 +46,8 @@ calcModelProcesses<-function(mc,showPlot=TRUE){
                Z_yxmsz=Z_yxmsz,
                S_yxmsz=S_yxmsz,
                prMolt_yxmsz=prMolt_yxmsz,
-               T_yxmszz=T_yxmszz,
+               T_yxmszz=G_list$prZAM_yxmszz,
+               mnMI_yxz=G_list$mnMI_yxz,
                prMat_yxz=prMat_yxz,
                F_list=F_list,
                S_list=S_list)

@@ -3,7 +3,8 @@
 #'
 #'@description Function to run the BBRKC simulation model to produce a Gmacs input file.
 #'
-#'@param fn - filename for output file (input file to gmacs)
+#'@param inpfn - input filename for rsim model configuration
+#'@param outfn - filename for output file (input file to gmacs)
 #'@param seed - random number generator seed
 #'@param showPlot - flag (T/F) to show plots
 #'@param pdf - name of pdf file to save plots to (if not NULL)
@@ -17,7 +18,8 @@
 #'
 #'@export
 #'
-runSim.BBRKC<-function(fn='gmacs.input.dat',
+runSim.BBRKC<-function(inpfn=NULL,
+                       outfn='gmacs.input.dat',
                        seed=NULL,
                        showPlot=TRUE,
                        pdf=NULL,
@@ -34,7 +36,7 @@ runSim.BBRKC<-function(fn='gmacs.input.dat',
                        
     #get model configuration for BBRKC
     cat("Reading model configuration file\n")
-    mc <- readModelConfiguration();
+    mc <- readModelConfiguration(fn=inpfn);
     
     #calculate model processes
     cat("\n\nCalculating model processes\n")
@@ -46,7 +48,7 @@ runSim.BBRKC<-function(fn='gmacs.input.dat',
     
     #output results to model files
     cat("\n\nWriting gmacs input file\n")
-    writeSim.gmacs(mc,mp,mr,fn=fn,showPlot=showPlot);
+    writeSim.gmacs(mc,mp,mr,fn=outfn,showPlot=showPlot);
     
-    return(invisible(list(mp=mp,mc=mc,mr=mr)));
+    return(invisible(list(mc=mc,mp=mp,mr=mr)));
 }

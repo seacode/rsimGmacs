@@ -4,11 +4,13 @@
 \alias{runSim.BBRKC}
 \title{Run the BBRKC simulation model to produce a Gmacs input file.}
 \usage{
-runSim.BBRKC(fn = "gmacs.input.dat", seed = NULL, showPlot = TRUE,
-  pdf = NULL, width = 8, height = 6)
+runSim.BBRKC(inpfn = NULL, outfn = "gmacs.input.dat", seed = NULL,
+  showPlot = TRUE, pdf = NULL, width = 8, height = 6)
 }
 \arguments{
-\item{fn}{- filename for output file (input file to gmacs)}
+\item{inpfn}{- input filename for rsim model configuration}
+
+\item{outfn}{- filename for output file (input file to gmacs)}
 
 \item{seed}{- random number generator seed}
 
