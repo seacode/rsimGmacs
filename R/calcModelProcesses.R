@@ -29,14 +29,24 @@ calcModelProcesses<-function(mc,showPlot=TRUE){
     #calculate fishing mortalities
     F_list <- calcFishingMortalities(mc,showPlot=showPlot);
     
-    #calculate survey catchabilities (TODO: implement this)
+    #calculate survey catchabilities
     S_list <- calcSurveyCatchabilities(mc,showPlot=showPlot);
     
     #calculate time-varying total mortality
     Z_yxmsz <- M_yxmsz;
-    for (f in mc$dims$fisheries$nms){
-        Z_yxmsz[,,,,] <- Z_yxmsz[,,,,] + (F_list$F_fyxmsz)[f,,,,,];
+    for (f in mc$dims$f$nms){
+        cat("adding F to Z for",f,"\n")
+        for (y in mc$dims$y$nms){
+            for (x in mc$dims$x$nms){
+                for (m in mc$dims$m$nms){
+                    for (s in mc$dims$s$nms){
+                        Z_yxmsz[y,x,m,s,] <- Z_yxmsz[y,x,m,s,] + (F_list$FM_fyxmsz)[f,y,x,m,s,];
+                    }
+                }
+            }
+        }
     }
+    cat(dim(Z_yxmsz),'\n\n')
     
     #calculate survival
     S_yxmsz <- exp(-Z_yxmsz);

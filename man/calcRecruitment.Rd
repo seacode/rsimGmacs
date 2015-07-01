@@ -15,4 +15,8 @@ R_yxz: 3d array with numbers  of crab recruiting by year/sex/size
 \description{
 
 }
+\details{
+R_yxz has units of exp(lnR). If lnR is in log(millions), then R_yxz
+has units of millions of individuals.
+}
 

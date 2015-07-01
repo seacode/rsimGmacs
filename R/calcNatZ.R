@@ -52,7 +52,8 @@ calcNatZ<-function(mc,mp,iN_xmsz,R_yxz,showPlot=TRUE){
         p <- ggplot(aes(x=y,y=`.`,color=x,shape=x),data=ddfr);
         p <- p + geom_line(alpha=0.8,width=2);
         p <- p + geom_point(alpha=0.8);
-        p <- p + labs(x='year',y='Population Abundance');
+        p <- p + ylim(0,NA)
+        p <- p + labs(x='year',y='Population Abundance (millions)');
         p <- p + guides(color=guide_legend('',order=1,alpha=1),
                         shape=guide_legend('',order=3));
         print(p);
@@ -64,12 +65,12 @@ calcNatZ<-function(mc,mp,iN_xmsz,R_yxz,showPlot=TRUE){
         p <- p + scale_fill_gradient();
         p <- p + geom_abline(intercept=0,slope=1,linetype=3,color='black');
         p <- p + labs(x='year',y='size (mm)',title='Population Abundance');
-        p <- p + guides(fill=guide_colorbar('Abundance',order=1,alpha=1),
+        p <- p + guides(fill=guide_colorbar('Abundance\n(millions)',order=1,alpha=1),
                         size=guide_legend('',order=2));
-        if (mc$type=='KC'){
-            p <- p + facet_wrap(~ x + s, ncol=1);#only 1 maturity state
+        if (mc$dims$m$n==1){
+            p <- p + facet_grid(s ~ x);#only 1 maturity state
         } else {
-            p <- p + facet_wrap(~ m + s + x, ncol=1);
+            p <- p + facet_grid(m + s ~ x);
         }
         print(p);
     }

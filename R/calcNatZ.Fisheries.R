@@ -51,7 +51,8 @@ calcNatZ.Fisheries<-function(mc,mp,N_yxmsz,showPlot=TRUE){
         p <- ggplot(aes(x=y,y=`.`,color=f,linetype=type,shape=type),data=ddfr);
         p <- p + geom_line(alpha=0.8,width=2);
         p <- p + geom_point(alpha=0.8);
-        p <- p + labs(x='year',y='Fishery Catch/Mortality');
+        p <- p + ylim(0,NA)
+        p <- p + labs(x='year',y='Fishery Catch/Mortality (millions)');
         p <- p + guides(color=guide_legend('fishery',order=1,alpha=1),
                         linetype=guide_legend('type',order=2),
                         shape=guide_legend('type',order=2));

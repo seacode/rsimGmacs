@@ -53,7 +53,7 @@ calcInitSizeDist<-function(mc,mp,showPlot=TRUE){
         mdfr<-melt(n_xmsz,value.name='val')
         p <- ggplot(aes(x=z,y=val,fill=s),data=mdfr);
         p <- p + geom_bar(alpha=0.5,stat='identity',position='dodge');
-        p <- p + labs(x='size (mm)',y='initial abundance')
+        p <- p + labs(x='size (mm)',y='initial abundance (millions)')
         p <- p + guides(fill=guide_legend('shell condition'))
         p <- p + facet_wrap(~x+m,ncol=1);
         print(p)

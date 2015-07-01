@@ -45,10 +45,12 @@ calcSurveyCatchabilities<-function(mc,showPlot=TRUE){
                 for (y in yrs) {sel_yxz[y,x,]<-sel_xz[x,];}
             }#x
             if (showPlot){
+                #plot selectivity functions
                 mdfr<-melt(sel_xz,value.name='val');
                 p <- ggplot(aes(x=z,y=val,color=x),data=mdfr);
                 p <- p + geom_point(size=6);
                 p <- p + geom_line();
+                p <- p + ylim(0,1.05)
                 p <- p + labs(x='size (mm)',y='survey selectivity',title=paste(v,", ",t,sep=''))
                 p <- p + guides(color=guide_legend(''))
                 print(p)
@@ -67,9 +69,11 @@ calcSurveyCatchabilities<-function(mc,showPlot=TRUE){
             }#y
         }#t
         if (showPlot){
+            #plot fully-selected catchabilities
             mdfr<-melt(Q_yx,value.name='val');
             p <- ggplot(aes(x=y,y=val,color=x),data=mdfr);
             p <- p + geom_line();
+            p <- p + ylim(0,NA)
             p <- p + labs(x='year',y='Catchability',title=v)
             p <- p + guides(color=guide_legend(''))
             print(p)

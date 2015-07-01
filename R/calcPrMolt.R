@@ -48,6 +48,7 @@ calcPrMolt<-function(mc,showPlot=TRUE){
     if (showPlot){
         p <- ggplot(aes(x=z,y=val,color=x),data=mdfr)
         p <- p + geom_line()
+        p <- p + ylim(0,1.05)
         p <- p + labs(x='size (mm)',y='pr(molt|sex,size)')
         p <- p + guides(color=guide_legend('sex'));
         p <- p + facet_wrap(~t,ncol=1);

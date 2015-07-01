@@ -62,6 +62,7 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
                 for (y in yrs) {ret_yxz[y,x,]<-ret_xz[x,];}
             }#x
             if (showPlot){
+                #plot selectivity/retention curves
                 sdfr<-melt(sel_xz,value.name='val');
                 sdfr$type<-'selectivity';
                 rdfr<-melt(ret_xz,value.name='val');
@@ -70,6 +71,7 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
                 p <- ggplot(aes(x=z,y=val,color=x,shape=type),data=mdfr);
                 p <- p + geom_point(size=6);
                 p <- p + geom_line();
+                p <- p + ylim(0,1.05)
                 p <- p + labs(x='size (mm)',y='selectivity/retention',title=paste(f,", ",t,sep=''))
                 p <- p + guides(color=guide_legend(''),shape=guide_legend(''))
                 print(p)
@@ -98,10 +100,12 @@ calcFishingMortalities<-function(mc,showPlot=TRUE){
             }#y
         }#b
         if (showPlot){
+            #plot fully-selected capture rates
             mdfr<-melt(F_yx,value.name='val');
             p <- ggplot(aes(x=y,y=val,color=x),data=mdfr);
             p <- p + geom_line();
-            p <- p + labs(x='year',y='Capture Rate',title=f)
+            p <- p + ylim(0,NA)
+            p <- p + labs(x='year',y='Fully-Selected Capture Rate',title=f)
             p <- p + guides(color=guide_legend(''))
             print(p)
         }

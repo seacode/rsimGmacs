@@ -20,7 +20,7 @@ KC     #model type (KC or TC for king crab or Tanner crab)
 'NMFS trawl survey' 'BSFRF trawl survey' #names for surveys
 #---------------------------------------------------------------
 #-----parameters
-#--Weight-at-size (in kg)
+#--Weight-at-size (kg)
 WatZ    #weight-at-size keyword
 1       #number of time blocks
 1975:2014 #time block 1
@@ -31,27 +31,15 @@ WatZ    #weight-at-size keyword
   'male' 'zbs>0'    4.03e-7   3.141334
 #--Natural mortality
 M      #natural mortality key word
-3      #number of time blocks
-1975:1989  #time block 1
+1      #number of time blocks
+1975:2014  #time block 1
 #sex       M      cv   
-   'male'  0.18    0.01  
- 'female'  0.18    0.01  
-1990:1994  #time block 2
-#sex       M      cv   
-   'male'  0.30    0.01  
- 'female'  0.45    0.01  
-1995:2014  #time block 3  
-#sex       M      cv   
-   'male'  0.18    0.01  
- 'female'  0.18    0.01  
+   'male'  0.18    0  
+ 'female'  0.18    0  
 #--Molting
 Molting
-2   #number of time blocks
-1975:1990  #time block 1
-#sex       mu    cv
-  'male'  115   0.20
-'female'  159   0.01
-1991:2014  #time block 2
+1   #number of time blocks
+1975:2014  #time block 1
 #sex       mu    cv
   'male'  115   0.20
 'female'  159   0.01
@@ -72,19 +60,18 @@ Maturity
 #--Recruitment (in millions)
 Recruitment
 #initialization
-#lnR       cvR   lnXR   sdXR   lnAlphaZ      lnBetaZ
-log(1000)  0.5     0      0    log(72.5)     log(0.4)     #4.283586562  -0.916290732
-2  #number of time blocks
-#years     lnR        cvR   lnXR   sdXR   lnAlphaZ      lnBetaZ
-1975:1990  log(1000)  0.5     0      0    log(72.5)       log(0.4)
-1991:2014   log(100)  0.5     0      0    log(72.5)       log(0.4)
+#lnR    cvR   lnXR   sdXR   lnAlphaZ      lnBetaZ
+log(1000)  0.0     0      0    log(72.5)     log(0.4)     #4.283586562  -0.916290732
+1  #number of time blocks
+#years     lnR       cvR   lnXR   sdXR   lnAlphaZ      lnBetaZ
+1975:2014 log(1000)  0.0     0      0    log(72.5)     log(0.4)     #4.283586562  -0.916290732
 #--Fisheries
 Fisheries #keyword
 #-fishery 1
 'BBRKC fishery'
 1   #number of time blocks
 #years   discard mortality   mean F   sd F   female offset   cv      add observation error
-1975:2014      0.3             0.3     0.4       0.1         0.2            TRUE
+1985:2014      0.3            0.3      0.0        0.0        0.1            TRUE
 #selectivity
 3   #number of curves
 #sex       type          function   np   params 
@@ -95,7 +82,7 @@ Fisheries #keyword
 'bycatch fishery'
 1   #number of time blocks
 #years   discard mortality    mean F  sd F   female offset   cv      add observation error
-1975:2014      0.8             0.2    0.2       0.1          0.2            TRUE
+1995:2014      0.8              0.2    0.0       0.1         0.1            TRUE
 #selectivity/retention
 2   #number of curves
 #sex       type          function    np params  
@@ -107,12 +94,12 @@ Surveys  #keyword
 'NMFS trawl survey'
 1   #number of time blocks
 #years       mean Q     sd Q  female offset   cv      add observation error
-1975:2014      0.7       0.1     0.8        0.2            TRUE
+1975:2014      1.0      0.0        0.8        0.2            TRUE
 #selectivity
 2   #number of curves
 #sex       type          function    np   params
   'male'  'selectivity' 'logistic'   2     50    20  #mu    sd
-'female'  'selectivity' 'logistic'   2     50    20  #mu    sd
+'female'  'selectivity' 'logistic'   2     40    20  #mu    sd
 #-survey 2
 'BSFRF trawl survey'
 1   #number of time blocks

@@ -58,6 +58,7 @@ calcWatZ.gmacs<-function(mc,showPlot=TRUE){
     if (showPlot){
         pz <- ggplot(mapping=aes(x=z,y=val,color=x),data=mdfr)
         pz <- pz + geom_line();
+        pz <- pz + ylim(0,NA)
         pz <- pz + labs(x='size (mm)',y='weight (kg)',title='')
         pz <- pz + guides(color=guide_legend('sex'));
         pz <- pz + facet_wrap(~t,ncol=1);

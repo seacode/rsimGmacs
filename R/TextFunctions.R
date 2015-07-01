@@ -28,21 +28,6 @@ stripComments<-function(strv,comment='#'){
 }#stripComments
 
 #'
-#'@title Parse a number from a character string vector.
-#'
-#'@title Function to parse a number from a character string vector.
-#'
-#'@param str - character vector to parse
-#'
-#'@return parsed numerical value
-#'
-#'@export
-#'
-parseNum<-function(str){
-    return(as.numeric(str));
-}
-
-#'
 #'@title Add quotes to a character string vector.
 #'
 #'@title Function to add quotes to a character string vector.

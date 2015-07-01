@@ -33,5 +33,10 @@ Function to run the BBRKC simulation model to produce a Gmacs input file.
 }
 \details{
 
+
+Recruitment parameter values in the input configuration file are assumed to be consistent with units of
+millions of individuals, while weight-at-size parameter values are assumed to be consistent with units of kg. If
+this is true, then output abundance-related quantities are in units of millions of individuals while
+biomass-related quantities are in units of 1000's t.
 }
 

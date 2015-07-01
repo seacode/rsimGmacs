@@ -65,6 +65,8 @@ calcZTM<-function(mc,showPlot=TRUE){
         p <- p + geom_abline(intercept=0,slope=1,linetype=3,color='black')
         p <- p + geom_line(width=2);
         p <- p + geom_point(size=5);
+        p <- p + xlim(range(d$zc$vls))
+        p <- p + ylim(range(d$zc$vls))
         p <- p + guides(color=guide_legend(''),shape=guide_legend(''));
         p <- p + labs(x='pre-molt size (mm)',y='mean post-molt size (mm)');
         p <- p + facet_wrap(~t,ncol=1);
@@ -75,7 +77,9 @@ calcZTM<-function(mc,showPlot=TRUE){
         p <- p + scale_size_area(max_size=10);
         p <- p + scale_fill_gradient()
         p <- p + geom_abline(intercept=0,slope=1,linetype=3,color='black')
-        p <- p + labs(x='pre-molt size (mm)',y='post-molt size (mm)',title='Growth Transition Matrices');
+        p <- p + xlim(range(d$zc$vls))
+        p <- p + ylim(range(d$zc$vls))
+        p <- p + labs(x='pre-molt size (mm)',y='post-molt size (mm)',title='Growth Matrices');
         p <- p + guides(fill=guide_colorbar(expression(pr*bgroup("(",paste(Z[post],"|",Z[pre]),")")),order=1,alpha=1),
                         size=guide_legend('',order=2));
         p <- p + facet_wrap(~ x+t, ncol=1);

@@ -5,6 +5,9 @@
 #'
 #'@return R_yxz: 3d array with numbers  of crab recruiting by year/sex/size
 #'
+#'@details R_yxz has units of exp(lnR). If lnR is in log(millions), then R_yxz
+#'has units of millions of individuals.
+#'
 #'@import ggplot2
 #'@import reshape2
 #'
@@ -65,13 +68,14 @@ calcRecruitment<-function(mc,showPlot=TRUE){
         mdfr<-melt(R_y,value.name='n')
         py <- ggplot(mapping=aes(x=y,y=n),data=mdfr)
         py <- py + geom_line();
-        py <- py + labs(x='year',y='Total Annual Recruitment',title='Recruitment')
+        py <- py + ylim(0,NA)
+        py <- py + labs(x='year',y='Annual Total Recruitment (millions)',title='Recruitment')
         print(py)
         mdfr<-melt(R_yx,value.name='p')
         px <- ggplot(mapping=aes(x=y,y=p),data=mdfr[mdfr$x=='male',])
         px <- px + geom_line();
+        px <- px + ylim(0,1)
         px <- px + labs(x='year',y='fraction male',title='sex ratio')
-        px <- px + ylim(c(0,1))
         print(px)
     }
     return(R_yxz)
